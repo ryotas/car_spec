@@ -1,0 +1,16 @@
+{
+  "db_engine":"RDBMS",
+  "jdbc_url":"jdbc:oracle:thin:@127.0.0.1:1521:orcl",
+  "username":"opg_user",
+  "password":"oracle",
+  "max_num_connections":8,
+  "error_handling":{},
+  "format":"pg",
+  "name":"car_spec",
+  "vertex_props":[
+    {"name":"MODEL","type":"string"}
+  , {"name":"TYPE","type":"string"}
+  ],
+  "edge_props":[],
+  "loading":{"load_edge_label":true}
+}
