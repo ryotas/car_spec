@@ -66,7 +66,7 @@ INSERT INTO ope
     seq_ope.NEXTVAL AS edge_id
   , id AS source_vertex_id
   , destination_vertex_id
-  , 'hasType' AS edge_label
+  , 'hasPart' AS edge_label
   , 'TYPE' AS key_name
   , 1 AS value_type
   , value1
@@ -119,7 +119,7 @@ UNION
 INSERT INTO opv
   SELECT
     ORA_HASH(value1) AS vertex_id
-  , 'model' AS key_name
+  , 'MODEL' AS key_name
   , 1 AS value_type
   , value1
   , null AS value2
@@ -136,8 +136,8 @@ INSERT INTO opv
 INSERT INTO ope
   SELECT
     seq_ope.NEXTVAL AS edge_id
-  , ORA_HASH(sid) AS source_vertex_id
-  , ORA_HASH(did) AS destination_vertex_id
+  , sid AS source_vertex_id
+  , did AS destination_vertex_id
   , 'hasPart' AS edge_label
   , 'TYPE' AS key_name
   , 1 AS value_type
@@ -145,11 +145,91 @@ INSERT INTO ope
   , null AS value2
   , null AS value3
   FROM (
-        SELECT DISTINCT cylinder_block AS sid, cylinder_head AS did, 'cylinder_head_id' AS value1 FROM engine
-  UNION SELECT DISTINCT cylinder_block AS sid, cylinder AS did, 'cylinder_id' AS value1 FROM engine
-  UNION SELECT DISTINCT distributor AS sid, distributor_cap AS did, 'distributor_cap_id' AS value1 FROM engine
-  UNION SELECT DISTINCT distributor AS sid, distributor_oring AS did, 'distributor_oring_id' AS value1 FROM engine
+        SELECT DISTINCT id AS sid, ORA_HASH(cylinder_block) AS did, 'cylinder_block_id' AS value1 FROM engine
+  UNION SELECT DISTINCT id AS sid, ORA_HASH(distributor) AS did, 'distributor_id' AS value1 FROM engine
+  UNION SELECT DISTINCT ORA_HASH(cylinder_block) AS sid, ORA_HASH(cylinder_head) AS did, 'cylinder_head_id' AS value1 FROM engine
+  UNION SELECT DISTINCT ORA_HASH(cylinder_block) AS sid, ORA_HASH(cylinder) AS did, 'cylinder_id' AS value1 FROM engine
+  UNION SELECT DISTINCT ORA_HASH(distributor) AS sid, ORA_HASH(distributor_cap) AS did, 'distributor_cap_id' AS value1 FROM engine
+  UNION SELECT DISTINCT ORA_HASH(distributor) AS sid, ORA_HASH(distributor_oring) AS did, 'distributor_oring_id' AS value1 FROM engine
   );
+
+COMMIT;
+
+-- MOTOR
+
+INSERT INTO opv
+  SELECT DISTINCT
+    id AS vertex_id
+  , 'TYPE' AS key_name
+  , 1 AS value_type
+  , 'motor' AS value1
+  , null AS value2
+  , null AS value3
+  FROM motor;
+
+INSERT INTO opv
+  SELECT
+    id AS vertex_id
+  , key_name
+  , 1 AS value_type
+  , value1
+  , null AS value2
+  , null AS value3
+  FROM motor
+  UNPIVOT EXCLUDE NULLS
+  (value1 FOR key_name IN
+    (model, category))
+UNION
+  SELECT
+    id AS vertex_id
+  , key_name
+  , 4 AS value_type
+  , null AS value1
+  , value2
+  , null AS value
+  FROM motor
+  UNPIVOT EXCLUDE NULLS
+  (value2 FOR key_name IN
+    (power, max_power, max_power_net, max_torque, max_torque_net));
+
+COMMIT;
+
+-- BATTERY
+
+INSERT INTO opv
+  SELECT DISTINCT
+    id AS vertex_id
+  , 'TYPE' AS key_name
+  , 1 AS value_type
+  , 'battery' AS value1
+  , null AS value2
+  , null AS value3
+  FROM battery;
+
+INSERT INTO opv
+  SELECT
+    id AS vertex_id
+  , key_name
+  , 1 AS value_type
+  , value1
+  , null AS value2
+  , null AS value3
+  FROM battery
+  UNPIVOT EXCLUDE NULLS
+  (value1 FOR key_name IN
+    (model, category))
+UNION
+  SELECT
+    id AS vertex_id
+  , key_name
+  , 4 AS value_type
+  , null AS value1
+  , value2
+  , null AS value
+  FROM battery
+  UNPIVOT EXCLUDE NULLS
+  (value2 FOR key_name IN
+    (capacity, voltage, total_voltage, total_energy));
 
 COMMIT;
 

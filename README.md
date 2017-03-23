@@ -1,4 +1,4 @@
-# car_spec
+# carspec
 
     sqlplus rdfuser/rdfuser @create_opx.sql 
     sqlplus rdfuser/rdfuser @export_csv.sql
@@ -12,12 +12,12 @@
 
 ```
 oracle = new Oracle("jdbc:oracle:thin:@127.0.0.1:1521:orcl","opg_user","oracle");
-opg = OraclePropertyGraph.getInstance(oracle, "car_spec");
+opg = OraclePropertyGraph.getInstance(oracle, "carspec");
 opg.countVertices();
 opg.clearRepository();
 opgdl = OraclePropertyGraphDataLoader.getInstance();
-vfile = "car_spec.opv";
-efile = "car_spec.ope";
+vfile = "data.opv";
+efile = "data.ope";
 opgdl.loadData(opg, vfile, efile, 4/*dop*/);
 opg.countVertices();
 opg.countEdges();
@@ -31,8 +31,8 @@ opg.commit();
     sqlplus opg_user/oracle
 
 ```
-SELECT COUNT(DISTINCT vid) FROM car_specVT$;
-SELECT COUNT(DISTINCT eid) FROM car_specGE$;
+SELECT COUNT(DISTINCT vid) FROM carspecVT$;
+SELECT COUNT(DISTINCT eid) FROM carspecGE$;
 
 set lines 200
 set pages 500
@@ -40,8 +40,8 @@ col k for a30
 col v for a50
 col el for a20
 
-SELECT vid, k, t, v FROM car_specVT$ WHERE vid=101;
-SELECT eid, svid, dvid, el, k, t FROM car_specGE$ WHERE svid=101;
+SELECT vid, k, t, v FROM carspecVT$ WHERE vid=101;
+SELECT eid, svid, dvid, el, k, t, v FROM carspecGE$ WHERE svid=101;
 
 EXIT
 ```
@@ -54,13 +54,18 @@ EXIT
 G = session.readGraphWithProperties("load_to_pgx.json")
 
 G.queryPgql(" \
-  SELECT n.id(), n.MODEL, n.CATEGORY WHERE (n) \
+  SELECT n.id(), n.TYPE, n.CATEGORY, n.MODEL, n.NAME \
+  WHERE (n), n.TYPE='body' ORDER BY n.TYPE \
 ").print()
 
 G.queryPgql(" \
-  SELECT b1.MODEL, r1.label(), c.MODEL, r2.label(), b2.MODEL \
-  WHERE (b1)-[r1]->(c)<-[r2]-(b2), \
-  b1.MODEL='DAA-NHP10-AHXXB', b1!=b2 \
+  SELECT c1.MODEL, r1.label(), c2.MODEL, c2.TYPE \
+  WHERE (c1)-[r1]->(c2), c1.MODEL='DAA-NHP10-AHXXB' \
+").print()
+
+G.queryPgql(" \
+  SELECT c1.MODEL, r1.label(), c2.MODEL, r2.label(), r2.TYPE, c3.MODEL, r3.label(), r3.TYPE, c4.MODEL \
+  WHERE (c1)-[r1]->(c2)-[r2]->(c3)-[r3]->(c4), c1.MODEL='DAA-NHP10-AHXXB' \
 ").print()
 ```
 

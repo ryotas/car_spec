@@ -6,7 +6,7 @@ SET FEEDBACK OFF
 SET TERMOUT OFF
 SET TRIMSPOOL ON
 
-SPOOL car_spec.opv
+SPOOL data.opv
 SELECT
         vertex_id
 ||','|| key_name
@@ -17,7 +17,7 @@ SELECT
 FROM opv;
 SPOOL OFF
 
-SPOOL car_spec.ope
+SPOOL data.ope
 SELECT
         edge_id
 ||','|| source_vertex_id

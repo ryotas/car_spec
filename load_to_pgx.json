@@ -6,7 +6,7 @@
   "max_num_connections":8,
   "error_handling":{},
   "format":"pg",
-  "name":"car_spec",
+  "name":"carspec",
   "vertex_props":[
     {"name":"TYPE","type":"string"}
   , {"name":"MODEL","type":"string"}
