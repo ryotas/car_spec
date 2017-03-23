@@ -11,10 +11,15 @@ ex:TriplesMap_Body
   rr:predicateObjectMap [ 
     rr:predicate ex:model ; 
     rr:objectMap [ rr:column "MODEL" ] 
-  ] ;
-  rr:predicateObjectMap [ 
+  ] , [ 
     rr:predicate ex:type ; 
     rr:objectMap [ rr:column "TYPE" ] 
+  ] , [ 
+    rr:predicate ex:hasPart ; 
+    rr:objectMap [ 
+      rr:parentTriplesMap ex:TriplesMap_Engine ; 
+      rr:joinCondition [ rr:child "ENGINE_ID" ; rr:parent "ID" ; ] 
+    ] 
   ] .
 
 ex:TriplesMap_Engine
@@ -26,15 +31,7 @@ ex:TriplesMap_Engine
   rr:predicateObjectMap [
     rr:predicate ex:model ;
     rr:objectMap [ rr:column "MODEL" ]
-  ] ;
-  rr:predicateObjectMap [
+  ] , [
     rr:predicate ex:type ;
     rr:objectMap [ rr:column "TYPE" ]
-  ] ;
-  rr:predicateObjectMap [ 
-    rr:predicate ex:engine ; 
-    rr:objectMap [ 
-      rr:parentTriplesMap ex:TriplesMap_Engine ; 
-      rr:joinCondition [ rr:child "ENGINE_ID" ; rr:parent "ID" ; ] 
-    ] 
   ] . 

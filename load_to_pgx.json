@@ -8,9 +8,13 @@
   "format":"pg",
   "name":"car_spec",
   "vertex_props":[
-    {"name":"MODEL","type":"string"}
-  , {"name":"TYPE","type":"string"}
+    {"name":"TYPE","type":"string"}
+  , {"name":"MODEL","type":"string"}
+  , {"name":"NAME","type":"string"}
+  , {"name":"CATEGORY","type":"string"}
   ],
-  "edge_props":[],
+  "edge_props":[
+    {"name":"TYPE","type":"string"}
+  ],
   "loading":{"load_edge_label":true}
 }

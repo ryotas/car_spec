@@ -51,10 +51,10 @@ EXIT
     sh $ORACLE_HOME/md/property_graph/pgx/bin/pgx
 
 ```
-G = session.readGraphWithProperties("car_spec.json")
+G = session.readGraphWithProperties("load_to_pgx.json")
 
 G.queryPgql(" \
-  SELECT n.id(), n.MODEL WHERE (n) \
+  SELECT n.id(), n.MODEL, n.CATEGORY WHERE (n) \
 ").print()
 
 G.queryPgql(" \
@@ -66,3 +66,6 @@ G.queryPgql(" \
 
 -- RDF View
 
+* Open R2RML Editor of SQL Developer and import r2rml.nt.
+* Commit this mapping to a RDF view "carspec_rdfview".
+* Open SPARQL Editor and execute the following SPARQL queries.

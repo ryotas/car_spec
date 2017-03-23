@@ -21,7 +21,20 @@ CREATE TABLE ope (
 , value3 DATE
 );
 
+DROP SEQUENCE seq_ope;
+CREATE SEQUENCE seq_ope;
+
 -- BODY
+
+INSERT INTO opv
+  SELECT DISTINCT
+    id AS vertex_id
+  , 'TYPE' AS key_name
+  , 1 AS value_type
+  , 'body' AS value1
+  , null AS value2
+  , null AS value3
+  FROM body;
 
 INSERT INTO opv
   SELECT
@@ -34,7 +47,7 @@ INSERT INTO opv
   FROM body
   UNPIVOT EXCLUDE NULLS
   (value1 FOR key_name IN
-    (model, type, name, name_en, grade, battery_type, steering, suspension_front, suspention_rear, brake_front, brake_rear, brake_system, drive_system, fuel_efficiency, fuel_efficiency, fuel_efficiency, fuel_efficiency, fuel_efficiency, fuel_efficiency, fuel_efficiency, fuel_efficiency))
+    (model, category, name, battery_type, steering, suspension_front, suspention_rear, brake_front, brake_rear, brake_system, drive_system))
 UNION
   SELECT
     id AS vertex_id
@@ -48,26 +61,35 @@ UNION
   (value2 FOR key_name IN
     (weight, weight_total, min_turning_radius, fuel_consumption, fuel_capacity, length, width, height, wheel_base, tread_front, tread_rear, min_ground_clearance, interior_length, interior_width, interior_height, capacity, num_battery));
 
-DROP SEQUENCE seq_ope;
-CREATE SEQUENCE seq_ope;
-
 INSERT INTO ope
   SELECT
     seq_ope.NEXTVAL AS edge_id
   , id AS source_vertex_id
   , destination_vertex_id
-  , edge_label
-  , null AS key_name
-  , null AS value_type
-  , null AS value1
+  , 'hasType' AS edge_label
+  , 'TYPE' AS key_name
+  , 1 AS value_type
+  , value1
   , null AS value2
   , null AS value3
   FROM body
   UNPIVOT EXCLUDE NULLS
-  (destination_vertex_id FOR edge_label IN
+  (destination_vertex_id FOR value1 IN
     (engine_id, transmission_id, motor_id, motor_id2, battery_id));
 
+COMMIT;
+
 -- ENGINE
+
+INSERT INTO opv
+  SELECT DISTINCT
+    id AS vertex_id
+  , 'TYPE' AS key_name
+  , 1 AS value_type
+  , 'engine' AS value1
+  , null AS value2
+  , null AS value3
+  FROM engine;
 
 INSERT INTO opv
   SELECT
@@ -80,7 +102,7 @@ INSERT INTO opv
   FROM engine
   UNPIVOT EXCLUDE NULLS
   (value1 FOR key_name IN
-    (model, type, supercharger, fuel, max_output, max_output_net, max_torque, max_torque_net, fuel_supply_system))
+    (model, category, supercharger, fuel, max_output, max_output_net, max_torque, max_torque_net, fuel_supply_system))
 UNION
   SELECT
     id AS vertex_id
@@ -93,6 +115,41 @@ UNION
   UNPIVOT EXCLUDE NULLS
   (value2 FOR key_name IN
     (displacement, inner_diameter, stroke, compression_ratio));
+
+INSERT INTO opv
+  SELECT
+    ORA_HASH(value1) AS vertex_id
+  , 'model' AS key_name
+  , 1 AS value_type
+  , value1
+  , null AS value2
+  , null AS value3
+  FROM (
+        SELECT DISTINCT cylinder_block AS value1 FROM engine
+  UNION SELECT DISTINCT cylinder AS value1 FROM engine
+  UNION SELECT DISTINCT cylinder_head AS value1 FROM engine
+  UNION SELECT DISTINCT distributor AS value1 FROM engine
+  UNION SELECT DISTINCT distributor_cap AS value1 FROM engine
+  UNION SELECT DISTINCT distributor_oring AS value1 FROM engine
+  );
+
+INSERT INTO ope
+  SELECT
+    seq_ope.NEXTVAL AS edge_id
+  , ORA_HASH(sid) AS source_vertex_id
+  , ORA_HASH(did) AS destination_vertex_id
+  , 'hasPart' AS edge_label
+  , 'TYPE' AS key_name
+  , 1 AS value_type
+  , value1
+  , null AS value2
+  , null AS value3
+  FROM (
+        SELECT DISTINCT cylinder_block AS sid, cylinder_head AS did, 'cylinder_head_id' AS value1 FROM engine
+  UNION SELECT DISTINCT cylinder_block AS sid, cylinder AS did, 'cylinder_id' AS value1 FROM engine
+  UNION SELECT DISTINCT distributor AS sid, distributor_cap AS did, 'distributor_cap_id' AS value1 FROM engine
+  UNION SELECT DISTINCT distributor AS sid, distributor_oring AS did, 'distributor_oring_id' AS value1 FROM engine
+  );
 
 COMMIT;
 
