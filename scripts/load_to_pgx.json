@@ -1,7 +1,7 @@
 {
   "db_engine":"RDBMS",
   "jdbc_url":"jdbc:oracle:thin:@127.0.0.1:1521:orcl",
-  "username":"opg_user",
+  "username":"carspec_pguser",
   "password":"oracle",
   "max_num_connections":8,
   "error_handling":{},

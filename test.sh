@@ -1,12 +1,12 @@
 
 # Setting Up Environments
 
-sqlplus / as sysdba @scripts/setup.sql 
+sqlplus / as sysdba @scripts/create_users.sql 
 
 # Creating Property Graph Data
 
-sqlplus rdfuser/rdfuser @scripts/create_opx.sql 
-sqlplus rdfuser/rdfuser @scripts/export_csv.sql
+sqlplus carspec_rdfuser/oracle @scripts/create_opx.sql 
+sqlplus carspec_rdfuser/oracle @scripts/export_csv.sql
 
 # Loading Data into Property Graph
 
@@ -18,7 +18,7 @@ sh $ORACLE_HOME/md/property_graph/dal/groovy/gremlin-opg-rdbms.sh
 
 # Executing SQL Queries on Property Graph
 
-sqlplus opg_user/oracle @scripts/query_to_pg.sql
+sqlplus carspec_pguser/oracle @scripts/query_to_pg.sql
 
 # Loading Data into PGX and Executing PGQL Queries
 

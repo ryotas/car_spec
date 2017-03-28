@@ -1,4 +1,4 @@
-oracle = new Oracle("jdbc:oracle:thin:@127.0.0.1:1521:orcl","opg_user","oracle");
+oracle = new Oracle("jdbc:oracle:thin:@127.0.0.1:1521:orcl","carspec_pguser","oracle");
 opg = OraclePropertyGraph.getInstance(oracle, "carspec");
 opg.countVertices();
 opg.clearRepository();
