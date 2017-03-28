@@ -2,7 +2,7 @@
 
 ## Setup
 
-This script is tested on Oracle Database 12.2.0.1 with Patch ２５６４０３２５.
+This script is tested on Oracle Database 12.2.0.1 with Patch 25640325.
 
 * Patch 25640325: MISSING PGQL FUNCTION IN ORACLE DATABASE RELEASE 12.2.0.1
 
@@ -26,7 +26,7 @@ To test the whole demo contents, run this script.
 * Executing SQL Queries on Property Graph
 * Loading Data into PGX and Executing PGQL Queries
 
-The following steps are not yet completed.
+The following steps are not yet included.
 
 * Creating RDF View and Executing SPARQL Queries
 * Creating (Materialized) Semantic Model
