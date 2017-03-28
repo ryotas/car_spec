@@ -12,6 +12,9 @@ ex:TriplesMap_Body
     rr:predicate ex:model ; 
     rr:objectMap [ rr:column "MODEL" ] 
   ] , [ 
+    rr:predicate ex:category ; 
+    rr:objectMap [ rr:column "CATEGORY" ] 
+  ] , [ 
     rr:predicate ex:type ; 
     rr:objectMap [ rr:column "TYPE" ] 
   ] , [ 
@@ -32,6 +35,29 @@ ex:TriplesMap_Engine
     rr:predicate ex:model ;
     rr:objectMap [ rr:column "MODEL" ]
   ] , [
-    rr:predicate ex:type ;
-    rr:objectMap [ rr:column "TYPE" ]
-  ] . 
+    rr:predicate ex:category ;
+    rr:objectMap [ rr:column "CATEGORY" ]
+  ] , [
+    rr:predicate ex:hasPart ;
+    rr:objectMap [
+      rr:parentTriplesMap ex:TriplesMap_CylinderBlock ;
+      rr:joinCondition [ rr:child "MODEL" ; rr:parent "MODEL" ; ]
+    ]
+  ] .
+
+ex:TriplesMap_CylinderBlock
+  rr:logicalTable [ rr:tableName "ENGINE" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/cylinderblock/{CYLINDER_BLOCK}" ;
+    rr:class ex:CylinderBlock ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "CYLINDER_BLOCK" ]
+  ] , [
+    rr:predicate ex:hasPart ;
+    rr:objectMap [
+      rr:parentTriplesMap ex:TriplesMap_Engine ;
+      rr:joinCondition [ rr:child "ENGINE_ID" ; rr:parent "ID" ; ]
+    ]
+  ] .
