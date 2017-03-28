@@ -1,82 +1,45 @@
 # carspec
 
+## Setup
 
-## Creating Property Graph Data
+This script is tested on Oracle Database 12.2.0.1 with Patch ２５６４０３２５.
 
-    sqlplus rdfuser/rdfuser @create_opx.sql 
-    sqlplus rdfuser/rdfuser @export_csv.sql
+* Patch 25640325: MISSING PGQL FUNCTION IN ORACLE DATABASE RELEASE 12.2.0.1
 
-## Loading Data into Property Graph 
+Also, sys password and file location are set as follows.
 
-Open Groovy Shell.
+* SYS user password: oracle
+* Data file location: /u01/app/oracle/oradata/orcl/*.dbf
 
-    export JAVA_HOME=${ORACLE_HOME}/jdk/jre/
-    export PATH=${JAVA_HOME}/bin:${PATH}
+To create a tablespace and configure it as a RDF semantic network, run this script (first time only).
 
-    sh $ORACLE_HOME/md/property_graph/dal/groovy/gremlin-opg-rdbms.sh
+    $ sh scripts/setup_semnet.sql
 
-Load local files (.opv and .ope) into property graph on database.
+## Test
 
-```
-oracle = new Oracle("jdbc:oracle:thin:@127.0.0.1:1521:orcl","opg_user","oracle");
-opg = OraclePropertyGraph.getInstance(oracle, "carspec");
-opg.countVertices();
-opg.clearRepository();
-opgdl = OraclePropertyGraphDataLoader.getInstance();
-vfile = "data.opv";
-efile = "data.ope";
-opgdl.loadData(opg, vfile, efile, 4/*dop*/);
-opg.countVertices();
-opg.countEdges();
-opg.commit();
+To test the whole demo contents, run this script.
 
-:exit
-```
+    $ sh test.sh
 
-## Executing SQL Queries on Property Graph
+* Creating Property Graph Data
+* Loading Data into Property Graph 
+* Executing SQL Queries on Property Graph
+* Loading Data into PGX and Executing PGQL Queries
 
-    sqlplus opg_user/oracle
+The following steps are not yet completed.
 
-```
-SELECT COUNT(DISTINCT vid) FROM carspecVT$;
-SELECT COUNT(DISTINCT eid) FROM carspecGE$;
+* Creating RDF View and Executing SPARQL Queries
+* Creating (Materialized) Semantic Model
+* Create Inference Rules and Obtain Entailments
+* Creating Another RDF View and Execute Cross-Domain Queries
 
-set lines 200
-set pages 500
-col k for a30
-col v for a50
-col el for a20
+## Demo
 
-SELECT vid, k, t, v FROM carspecVT$ WHERE vid=101;
-SELECT eid, svid, dvid, el, k, t, v FROM carspecGE$ WHERE svid=101;
+For learning this demo, the commands of the above test script should be executed one by one.
 
-EXIT
-```
+Also, for the following steps, you can do the same operations with SQL Developer GUI.
 
-## Loading Data into PGX and Executing PGQL Queries
-
-    sh $ORACLE_HOME/md/property_graph/pgx/bin/pgx
-
-```
-G = session.readGraphWithProperties("load_to_pgx.json")
-
-G.queryPgql(" \
-  SELECT n.id(), n.TYPE, n.CATEGORY, n.MODEL, n.NAME \
-  WHERE (n), n.TYPE='body' ORDER BY n.TYPE \
-").print()
-
-G.queryPgql(" \
-  SELECT c1.MODEL, r1.label(), c2.MODEL, c2.TYPE \
-  WHERE (c1)-[r1]->(c2), c1.MODEL='DAA-NHP10-AHXXB' \
-").print()
-
-G.queryPgql(" \
-  SELECT c1.MODEL, r1.label(), c2.MODEL, r2.label(), r2.TYPE, c3.MODEL, r3.label(), r3.TYPE, c4.MODEL \
-  WHERE (c1)-[r1]->(c2)-[r2]->(c3)-[r3]->(c4), c1.MODEL='DAA-NHP10-AHXXB' \
-").print()
-
-:exit
-```
+* SQL Developer 4.2 Early Adopter 2 (Version 4.2.0.16.356.1154) [Download](http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/sqldev-ea-42-3211401.html)
 
 ## Creating RDF View and Executing SPARQL Queries
 
@@ -86,13 +49,15 @@ G.queryPgql(" \
 
 ```
 PREFIX   ex: <http://example.com/ns#>
-
 SELECT DISTINCT ?c2 ?c2_model ?c2_type
 WHERE 
   { <http://data.example.com/body/DAA-NHP10-AHXXB> ex:hasPart ?c2 .
     ?c2 ex:model ?c2_model . ?c2 rdf:type ?c2_type . }
 LIMIT 1000
+```
 
+```
+PREFIX   ex: <http://example.com/ns#>
 SELECT DISTINCT ?c1_model ?c1_type ?c2_model ?c2_type ?c3_model ?c3_type ?c4_model ?c4_type
 WHERE 
   { <http://data.example.com/body/DAA-NHP10-AHXXB> ex:hasPart ?c2 . ?c2 ex:hasPart ?c3 . ?c3 ex:hasPart ?c4 .
@@ -115,5 +80,3 @@ Create a model.
 Load ata from the staging table. (This operation should be done with SQL Dev GUI, but not working yet.)
 
     EXECUTE SEM_APIS.bulk_load_from_staging_table('carspec_model','RDFUSER','STAGING')
-
-
