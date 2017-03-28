@@ -1,0 +1,179 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema> .
+@prefix ex: <http://example.com/ns#> .
+
+ex:TriplesMap_Body
+  rr:logicalTable [ rr:tableName "BODY" ] ; 
+  rr:subjectMap [ 
+    rr:template "http://data.example.com/body/{MODEL}" ; 
+    rr:class ex:Body ; 
+  ] ; 
+  rr:predicateObjectMap [ 
+    rr:predicate ex:model ; 
+    rr:objectMap [ rr:column "MODEL" ] 
+  ] , [ 
+    rr:predicate ex:category ; 
+    rr:objectMap [ rr:column "CATEGORY" ] 
+  ] , [ 
+    rr:predicate ex:hasPart ; 
+    rr:objectMap [ 
+      rr:parentTriplesMap ex:TriplesMap_Engine ; 
+      rr:joinCondition [ rr:child "ENGINE_ID" ; rr:parent "ID" ; ] 
+    ]
+  ] , [ 
+    rr:predicate ex:hasPart ; 
+    rr:objectMap [ 
+      rr:parentTriplesMap ex:TriplesMap_Motor ; 
+      rr:joinCondition [ rr:child "MOTOR_ID" ; rr:parent "ID" ; ] 
+    ]
+  ] , [ 
+    rr:predicate ex:hasPart ; 
+    rr:objectMap [ 
+      rr:parentTriplesMap ex:TriplesMap_Battery ; 
+      rr:joinCondition [ rr:child "BATTERY_ID" ; rr:parent "ID" ; ] 
+    ] 
+  ] .
+
+ex:TriplesMap_Engine
+  rr:logicalTable [ rr:tableName "ENGINE" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/engine/{MODEL}" ;
+    rr:class ex:Engine ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "MODEL" ]
+  ] , [
+    rr:predicate ex:category ;
+    rr:objectMap [ rr:column "CATEGORY" ]
+  ] , [
+    rr:predicate ex:hasPart ;
+    rr:objectMap [
+      rr:parentTriplesMap ex:TriplesMap_CylinderBlock ; 
+      rr:joinCondition [ rr:child "CYLINDER_BLOCK" ; rr:parent "CYLINDER_BLOCK" ; ] 
+    ]
+  ] , [
+    rr:predicate ex:hasPart ;
+    rr:objectMap [
+      rr:parentTriplesMap ex:TriplesMap_Distributor ; 
+      rr:joinCondition [ rr:child "DISTRIBUTOR" ; rr:parent "DISTRIBUTOR" ; ] 
+    ]
+  ] .
+
+ex:TriplesMap_CylinderBlock
+  rr:logicalTable [ rr:tableName "ENGINE" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/cylinderblock/{CYLINDER_BLOCK}" ;
+    rr:class ex:CylinderBlock ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "CYLINDER_BLOCK" ]
+  ] , [
+    rr:predicate ex:hasPart ;
+    rr:objectMap [
+      rr:template "http://data.example.com/cylinderhead/{CYLINDER_HEAD}" ;
+      rr:class ex:CylinderHead ;
+    ]
+  ] , [
+    rr:predicate ex:hasPart ;
+    rr:objectMap [
+      rr:template "http://data.example.com/cylinder/{CYLINDER}" ;
+      rr:class ex:Cylinder ;
+    ]
+  ] .
+
+ex:TriplesMap_CylinderHead
+  rr:logicalTable [ rr:tableName "ENGINE" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/cylinderhead/{CYLINDER_HEAD}" ;
+    rr:class ex:CylinderHead ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "CYLINDER_HEAD" ]
+  ] .
+
+ex:TriplesMap_Cylinder
+  rr:logicalTable [ rr:tableName "ENGINE" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/cylinder/{CYLINDER}" ;
+    rr:class ex:Cylinder ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "CYLINDER" ]
+  ] .
+
+ex:TriplesMap_Distributor
+  rr:logicalTable [ rr:tableName "ENGINE" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/distributor/{DISTRIBUTOR}" ;
+    rr:class ex:Distributor ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "DISTRIBUTOR" ]
+  ] , [
+    rr:predicate ex:hasPart ;
+    rr:objectMap [
+      rr:template "http://data.example.com/distributorcap/{DISTRIBUTOR_CAP}" ;
+      rr:class ex:DistributorCap ;
+    ]
+  ] , [
+    rr:predicate ex:hasPart ;
+    rr:objectMap [
+      rr:template "http://data.example.com/distributororing/{DISTRIBUTOR_ORING}" ;
+      rr:class ex:DistributorOring ;
+    ]
+  ] .
+
+ex:TriplesMap_DistributorCap
+  rr:logicalTable [ rr:tableName "ENGINE" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/distributorcap/{DISTRIBUTOR_CAP}" ;
+    rr:class ex:DistributorCap ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "DISTRIBUTOR_CAP" ]
+  ] .
+
+ex:TriplesMap_DistributorOring
+  rr:logicalTable [ rr:tableName "ENGINE" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/distributororing/{DISTRIBUTOR_ORING}" ;
+    rr:class ex:DistributorOring ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "DISTRIBUTOR_ORING" ]
+  ] .
+
+ex:TriplesMap_Motor
+  rr:logicalTable [ rr:tableName "MOTOR" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/motor/{MODEL}" ;
+    rr:class ex:Motor ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "MODEL" ]
+  ] , [
+    rr:predicate ex:category ;
+    rr:objectMap [ rr:column "CATEGORY" ]
+  ] .
+
+ex:TriplesMap_Battery
+  rr:logicalTable [ rr:tableName "BATTERY" ] ;
+  rr:subjectMap [
+    rr:template "http://data.example.com/battery/{MODEL}" ;
+    rr:class ex:Battery ;
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate ex:model ;
+    rr:objectMap [ rr:column "MODEL" ]
+  ] , [
+    rr:predicate ex:category ;
+    rr:objectMap [ rr:column "CATEGORY" ]
+  ] .
