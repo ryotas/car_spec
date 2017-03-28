@@ -1,0 +1,9 @@
+CREATE TABLE staging (
+  RDF$STC_sub  VARCHAR(4000) NOT NULL
+, RDF$STC_pred VARCHAR(4000) NOT NULL
+, RDF$STC_obj  VARCHAR(4000) NOT NULL
+);
+
+CREATE TABLE carspec_table ( triple SDO_RDF_TRIPLE_S );
+GRANT SELECT,INSERT on carspec_table to MDSYS;
+

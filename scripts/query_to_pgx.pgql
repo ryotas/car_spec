@@ -1,0 +1,18 @@
+G = session.readGraphWithProperties("scripts/load_to_pgx.json")
+
+G.queryPgql(" \
+  SELECT n.id(), n.TYPE, n.CATEGORY, n.MODEL, n.NAME \
+  WHERE (n), n.TYPE='body' ORDER BY n.TYPE \
+").print()
+
+G.queryPgql(" \
+  SELECT c1.MODEL, r1.label(), c2.MODEL, c2.TYPE \
+  WHERE (c1)-[r1]->(c2), c1.MODEL='DAA-NHP10-AHXXB' \
+").print()
+
+G.queryPgql(" \
+  SELECT c1.MODEL, r1.label(), c2.MODEL, r2.label(), r2.TYPE, c3.MODEL, r3.label(), r3.TYPE, c4.MODEL \
+  WHERE (c1)-[r1]->(c2)-[r2]->(c3)-[r3]->(c4), c1.MODEL='DAA-NHP10-AHXXB' \
+").print()
+
+:exit
