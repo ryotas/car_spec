@@ -1,4 +1,4 @@
-# carspec
+# CARSPEC - Car Specification Example
 
 ## Setup
 
@@ -32,6 +32,8 @@ The following steps are not yet included.
 * Creating (Materialized) Semantic Model
 * Create Inference Rules and Obtain Entailments
 * Creating Another RDF View and Execute Cross-Domain Queries
+* Visualize Property Graph with Cytoscape
+* Visualize Semantic Graph with Cytoscape
 
 ## Demo
 
@@ -41,7 +43,7 @@ Also, for the following steps, you can do the same operations with SQL Developer
 
 * SQL Developer 4.2 Early Adopter 2 (Version 4.2.0.16.356.1154) [Download](http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/sqldev-ea-42-3211401.html)
 
-## Creating RDF View and Executing SPARQL Queries
+### Creating RDF View and Executing SPARQL Queries
 
 * Open R2RML Editor of SQL Developer and import r2rml.nt.
 * Commit this mapping to a RDF view "carspec_rdfview".
@@ -68,7 +70,7 @@ WHERE
 LIMIT 1000
 ```
 
-## Creating (Materialized) Semantic Model
+### Creating (Materialized) Semantic Model
 
 Create a table to store triples.
 
