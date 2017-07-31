@@ -1,11 +1,20 @@
 
 # Setting Up Environments
 
-sqlplus / as sysdba @scripts/create_users.sql 
+echo -e "\n\n###################\n create_users.sql \n###################\n\n"
+sqlplus / as sysdba @scripts/create_users.sql
+
+# Importing Table Data
+
+echo -e "\n\n###################\n import_tables.sql \n###################\n\n"
+imp carspec_rdfuser/oracle tables=BODY,ENGINE,MOTOR,BATTERY file=data/data.dmp
 
 # Creating Property Graph Data
 
+echo -e "\n\n###################\n create_opx.sql \n###################\n\n"
 sqlplus carspec_rdfuser/oracle @scripts/create_opx.sql 
+
+echo -e "\n\n###################\n export_csv.sql \n###################\n\n"
 sqlplus carspec_rdfuser/oracle @scripts/export_csv.sql
 
 # Loading Data into Property Graph
